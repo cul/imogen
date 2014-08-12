@@ -13,7 +13,7 @@ module Imogen
     def self.convert(img, dest_path, scale=1500, format = :jpeg)
       w = img.width
       h = img.height
-      dims = (w > h) ? [1500, 1500*h/w] : [1500*w/h, 1500]
+      dims = (w > h) ? [scale, scale*h/w] : [scale*w/h, scale]
       img.rescale(dims[0], dims[1]) do |scaled|
         scaled = scaled.convert_to_24bits
         dst = FreeImage::File.new(dest_path)

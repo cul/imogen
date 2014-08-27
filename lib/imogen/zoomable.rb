@@ -1,4 +1,3 @@
-#require 'image_science'
 module Imogen
 	module Zoomable
     def self.levels_for(*dims)

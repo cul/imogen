@@ -13,6 +13,10 @@ class Edges
       img = src
       @xoffset = img.width.to_f/6
       @yoffset = img.height.to_f/6
+      if Imogen::AutoCrop::BoxInfo.squarish? img
+        @xoffset = @xoffset/2
+        @yoffset = @yoffset/2
+      end
       @tempfile = Tempfile.new(['crop','.png'])
 
       img.copy(@xoffset,@yoffset,img.width-@xoffset,img.height-@yoffset) do |crop|

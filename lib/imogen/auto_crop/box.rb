@@ -65,15 +65,24 @@ module Imogen::AutoCrop::Box
   class BoxInfo
     attr_reader :x, :y
     attr_accessor :radius
+    SQUARISH = 5.to_f / 6
     def initialize(x,y,r)
       @x = x
       @y = y
       @radius = r
     end
   end
+  def self.squarish?(img)
+    if img.is_a? FreeImage::Bitmap
+      dims = [img.width, img.length]
+      ratio = dims.min.to_f / dims.max
+      return ratio >= BoxInfo::SQUARISH
+    else
+      raise "#{img.class.name} is not a FreeImage::Bitmap"
+    end
+  end
   def self.info(grayscale)
     dims = [grayscale.cols, grayscale.rows]
-    ratio = dims.min / dims.max
-    ratio < 0.84 ? Best.new(grayscale).box() : Center.new(grayscale).box()
+    BoxInfo.squarish?(grayscale) ? Center.new(grayscale).box() : Best.new(grayscale).box()
   end
 end

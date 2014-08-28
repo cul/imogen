@@ -13,7 +13,7 @@ class Edges
       img = src
       @xoffset = img.width.to_f/6
       @yoffset = img.height.to_f/6
-      if Imogen::AutoCrop::BoxInfo.squarish? img
+      if Imogen::AutoCrop::Box.squarish? img
         @xoffset = @xoffset/2
         @yoffset = @yoffset/2
       end

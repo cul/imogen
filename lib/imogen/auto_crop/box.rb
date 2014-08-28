@@ -74,7 +74,11 @@ module Imogen::AutoCrop::Box
   end
   def self.squarish?(img)
     if img.is_a? FreeImage::Bitmap
-      dims = [img.width, img.length]
+      dims = [img.width, img.height]
+      ratio = dims.min.to_f / dims.max
+      return ratio >= BoxInfo::SQUARISH
+    elsif img.is_a? OpenCV::CvMat
+      dims = [img.cols, img.rows]
       ratio = dims.min.to_f / dims.max
       return ratio >= BoxInfo::SQUARISH
     else
@@ -83,6 +87,6 @@ module Imogen::AutoCrop::Box
   end
   def self.info(grayscale)
     dims = [grayscale.cols, grayscale.rows]
-    BoxInfo.squarish?(grayscale) ? Center.new(grayscale).box() : Best.new(grayscale).box()
+    squarish?(grayscale) ? Center.new(grayscale).box() : Best.new(grayscale).box()
   end
 end

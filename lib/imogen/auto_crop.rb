@@ -7,8 +7,8 @@ module Imogen
       edges = frame.get(scale)
       img.copy(*edges) do |crop|
         crop.rescale(scale, scale) do |thumb|
-          t24 = thumb.convert_to_24bits
           dst = FreeImage::File.new(dest_path)
+          t24 = (crop.color_type == :rgb) ?  thumb.convert_to_24bits : thumb.convert_to_8bits
           dst.save(t24, format)
           t24.free
           thumb.free

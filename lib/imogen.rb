@@ -15,7 +15,7 @@ module Imogen
       h = img.height
       dims = (w > h) ? [scale, scale*h/w] : [scale*w/h, scale]
       img.rescale(dims[0], dims[1]) do |scaled|
-        scaled = scaled.convert_to_24bits
+        scaled = (scaled.color_type == :rgb) ?  scaled.convert_to_24bits : scaled.convert_to_8bits
         dst = FreeImage::File.new(dest_path)
         dst.save(scaled, format)
         scaled.free

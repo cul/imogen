@@ -22,8 +22,13 @@ module Imogen
       end
     end
   end
+  module Cropped
+    def self.convert(img, dest_path, edges, scale=nil, format=:jpeg)
+    end
+  end
   require 'imogen/auto_crop'
   require 'imogen/zoomable'
+  require 'imogen/iiif'
 
   def self.search_paths
     @search_paths ||= begin

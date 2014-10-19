@@ -85,9 +85,7 @@ module Imogen
     result
   end
 
-  def self.image(src_path)
-
-    flags = 0
+  def self.image(src_path, flags=0)
 
     fif = format_from(src_path)
     if ((fif != :unknown) and FreeImage.FreeImage_FIFSupportsReading(fif))
@@ -97,9 +95,7 @@ module Imogen
     end
     return nil
   end
-  def self.with_image(src_path, &block)
-
-    flags = 0
+  def self.with_image(src_path, flags = 0, &block)
 
     fif = format_from(src_path)
     if ((fif != :unknown) and FreeImage.FreeImage_FIFSupportsReading(fif))

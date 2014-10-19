@@ -7,7 +7,8 @@ class Rotation < Transform
       return nil
     end
     raise BadRequest.new("bad rotate #{rotate}") unless rotate =~ /^-?\d+$/
-    r = rotate.to_i % 360
+    # negate offset because IIIF spec counts clockwise, FreeImage counterclockwise
+    r = (rotate.to_i * -1) % 360
     r = r + 360 if r < 0
     raise BadRequest.new("bad rotate #{rotate}") unless RIGHT_ANGLES.include? r
     return r > 0 ? r : nil

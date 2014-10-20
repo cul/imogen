@@ -6,7 +6,7 @@ module Imogen
       override = opts[:override]
       
     end
-    def self.iiif_paths(img,tile_size=512,format=:jpeg)
+    def self.iiif_paths(img,tile_size=128,format=:jpeg)
       width, height = img.width, img.height
       max_levels = Imogen::Zoomable.max_levels_for(width, height)
       results = {}
@@ -28,7 +28,7 @@ module Imogen
 
       end
     end
-    def self.iiif_opts_for_dzi(level,max_levels,col,row,tile_size=512,format=:jpeg)
+    def self.iiif_opts_for_dzi(level,max_levels,col,row,tile_size=128,format=:jpeg)
       level = level.to_i
       max_levels = max_levels.to_i
       c_ratio = 2**(max_levels-level)

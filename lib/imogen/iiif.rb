@@ -1,4 +1,3 @@
-require 'imogen/zoomable'
 module Imogen
   module Iiif
     class BadRequest < Exception; end
@@ -42,6 +41,7 @@ module Imogen
     autoload :Region, 'imogen/iiif/region'
     autoload :Size, 'imogen/iiif/size'
     autoload :Rotation, 'imogen/iiif/rotation'
+    autoload :Tiles, 'imogen/iiif/tiles'
 
     FORMATS = {jpeg: 'jpg', jpg: 'jpg', png: 'png'}
     EXTENSIONS = {'jpg' => :jpeg, 'png' => :png}
@@ -63,30 +63,11 @@ module Imogen
         end
       end
     end
-    def self.tile(img,dest_dir,format=nil,tile_size=96,override=false)
-      format ||=:jpeg
-      width, height = img.width, img.height
-      x, col = 0, 0
-      while x < width
-        y, row = 0, 0
-        while y < height
-          region = "#{x},#{y},#{Math.min(width-x,tile_size)},#{Math.min(height-y,tile_size)}"
-          size = "#{tile_size},"
-          dest_path = File.join(dest_dir,region,size,'0',"native.#{EXTENSIONS[format]}")
-          unless File.exists? dest_path or override
-            convert(img,dest_path,format,opts)
-          end
-          y += tile_size
-          row += 1
-        end
-        x += tile_size
-        col += 1
-      end
-    end
     def self.path_to_opts(path,parent_dir)
       if parent_dir and path.start_with? parent_dir
         path = path.sub(parent_dir,'')
       end
+      path = path[1..-1] if path =~ /^\//
       parts = path.split('/')
       quality = parts[-1].split('.')[0].to_sym
       format = EXTENSIONS[parts[-1].split('.')[1]]

@@ -20,7 +20,7 @@ class Region < Transform
       ]
     elsif md = /^(\d+),(\d+),(\d+),(\d+)$/.match(region)
       p = [Integer(md[1]),Integer(md[2]),Integer(md[3]),Integer(md[4])]
-      if p[0] == p[2] or p[1] == p[3]
+      if p[2] == 0 or p[3] == 0
         raise BadRequest.new("Invalid region: #{region}")
       end
       e = [

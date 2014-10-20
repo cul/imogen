@@ -13,17 +13,19 @@ describe Imogen::Iiif::Rotation, type: :unit do
         expect(subject.get("0")).to be_nil
         expect(subject.get(nil)).to be_nil
       end
+      # IIIF rotation is opposite FreeImage
       it "should calculate for positive values" do
-        expect(subject.get("90")).to eql(90)
+        expect(subject.get("90")).to eql(270)
         expect(subject.get("180")).to eql(180)
-        expect(subject.get("270")).to eql(270)
-        expect(subject.get("450")).to eql(90)
+        expect(subject.get("270")).to eql(90)
+        expect(subject.get("450")).to eql(270)
       end
+      # IIIF rotation is opposite FreeImage
       it "should calculate for negative values" do
-        expect(subject.get("-90")).to eql(270)
+        expect(subject.get("-90")).to eql(90)
         expect(subject.get("-180")).to eql(180)
-        expect(subject.get("-270")).to eql(90)
-        expect(subject.get("-450")).to eql(270)
+        expect(subject.get("-270")).to eql(270)
+        expect(subject.get("-450")).to eql(90)
       end
     end
     it "should reject arbitrary integer and float values" do

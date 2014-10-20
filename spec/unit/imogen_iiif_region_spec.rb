@@ -17,7 +17,8 @@ describe Imogen::Iiif::Region, type: :unit do
         expect(subject.get("80,15,60,75")).to eql([80,15,140,90])
       end
       it "should reject zero-dimension boxes" do
-        expect{subject.get("101,15,10,15")}.to raise_error Imogen::Iiif::BadRequest
+        expect{subject.get("101,15,0,15")}.to raise_error Imogen::Iiif::BadRequest
+        expect{subject.get("101,15,10,0")}.to raise_error Imogen::Iiif::BadRequest
       end
       describe "that exceeds the bounds" do
         it "should calculate an overlapping region" do

@@ -23,7 +23,7 @@ module Imogen
     module Quality
       VALUES = [:native, :color, :grey, :bitonal]
       def self.get(quality=:native)
-        q = quality.to_sym
+        q = (quality || :native).to_sym
         raise BadRequest.new("bad quality #{quality}") unless VALUES.include? q
         return (q == :native or q == :color) ? nil : q
       end
@@ -47,12 +47,14 @@ module Imogen
     EXTENSIONS = {'jpg' => :jpeg, 'png' => :png}
     def self.convert(img, dest_path, format=nil, opts={})
       format ||= opts.fetch(:format,:jpeg)
+      format = format.to_sym
       raise BadRequest.new("bad format #{format}") unless FORMATS.include? format
       Region.convert(img, opts[:region]) do |region|
         Size.convert(region, opts[:size]) do |size|
           Rotation.convert(size, opts[:rotation]) do |rotation|
             Quality.convert(rotation, opts[:quality]) do |quality|
               dst = FreeImage::File.new(dest_path)
+              format = :jpeg if format == :jpg
               if (img.color_type == :rgb)
                 quality.convert_to_24bits {|result| dst.save(result, format)}
               else

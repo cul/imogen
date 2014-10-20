@@ -2,7 +2,7 @@ module Imogen
 module Iiif
 class Size < Transform
 	def get(scale=nil)
-    if scale.nil? or scale.eql? "0"
+    if scale.nil? or scale.eql? "full"
       return nil
     end
     if md = /^(\d+)?,(\d+)?$/.match(scale)

@@ -5,7 +5,7 @@ class Size < Transform
     if scale.nil? or scale.eql? "full"
       return nil
     end
-    if md = /^(\d+)?,(\d+)?$/.match(scale)
+    if md = /^[!]?(\d+)?,(\d+)?$/.match(scale)
       w = md[1] ? min(Integer(md[1]), @width) : nil
       h = md[2] ? min(Integer(md[2]), @height) : nil
       raise BadRequest.new("bad scale #{scale}") unless w or h
@@ -21,6 +21,15 @@ class Size < Transform
       raise BadRequest.new("bad size #{scale}")
     end
     raise BadRequest.new("bad size #{scale}") if e[0] <= 0 or e[1] <= 0
+    if scale.start_with? '!'
+      w_ratio = e[0].to_f / @width
+      h_ratio = e[1].to_f / @height
+      if w_ratio > h_ratio
+        e[0] = (@width * h_ratio).round
+      elsif h_ratio > w_ratio
+        e[1] = (@height * w_ratio).round
+      end
+    end
     return e
   end
   def self.convert(img, size)

@@ -34,6 +34,7 @@ describe Imogen::Iiif::Size, type: :unit do
     describe "with scaling width and height" do
       it "should calculate for a good value" do
         expect(subject.get("105,79")).to eql([105, 79])
+        expect(subject.get("105,105")).to eql([105, 105])
       end
       it "should not upscale" do
         expect(subject.get("350,262")).to eql([175, 131])
@@ -43,6 +44,9 @@ describe Imogen::Iiif::Size, type: :unit do
         expect{subject.get("350,-2")}.to raise_error Imogen::Iiif::BadRequest
         expect{subject.get("0,262")}.to raise_error Imogen::Iiif::BadRequest
         expect{subject.get("0,262")}.to raise_error Imogen::Iiif::BadRequest
+      end
+      it "should caculate for 'contained' Wh" do
+        expect(subject.get("!105,105")).to eql([105, 79])
       end
     end
     describe "with a percentage scale" do

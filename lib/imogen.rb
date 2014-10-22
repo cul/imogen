@@ -90,7 +90,7 @@ module Imogen
     fif = format_from(src_path)
     if ((fif != :unknown) and FreeImage.FreeImage_FIFSupportsReading(fif))
       ptr = FreeImage.FreeImage_Load(fif, src_path, flags)
-      FreeImage.check_last_error
+      FreeImage.check_last_error(ptr)
       return FreeImage::Bitmap.new(ptr, nil)
     end
     return nil
@@ -100,7 +100,7 @@ module Imogen
     fif = format_from(src_path)
     if ((fif != :unknown) and FreeImage.FreeImage_FIFSupportsReading(fif))
       ptr = FreeImage.FreeImage_Load(fif, src_path, flags)
-      FreeImage.check_last_error
+      FreeImage.check_last_error(ptr)
       FreeImage::Bitmap.new(ptr, nil, &block)
     end
   end

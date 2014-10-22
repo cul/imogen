@@ -5,8 +5,10 @@ module Iiif
 class Region < Transform
   # returns leftX, topY, rightX, bottomY
   def get(region=nil)
-    if region.nil? || region == 'full'
+    if region.nil? || region.to_s == 'full'
       return nil
+    elsif region.to_s == 'featured'
+      return :featured
     elsif md = /^pct:(\d+(\.\d+)?),(\d+(\.\d+)?),(\d+(\.\d+)?),(\d+(\.\d+)?)$/.match(region)
       p = [Float(md[1]),Float(md[3]),Float(md[5]),Float(md[7])]
       if p[0] == p[2] or p[1] == p[3]
@@ -42,10 +44,18 @@ class Region < Transform
   end
   def self.convert(img, region)
     edges = Region.new(img).get(region)
-    if edges
-      img.copy(*edges) {|crop| yield crop}
-    else
+    if edges.nil?
       yield img
+    else
+      if edges == :featured
+        frame = Imogen::AutoCrop::Edges.new(img)
+        begin
+          edges = frame.get([img.width, img.height,768].min)
+        ensure
+          frame.unlink
+        end
+      end
+      img.copy(*edges) {|crop| yield crop}
     end
   end
 end

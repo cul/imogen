@@ -21,11 +21,11 @@ module Imogen
       end
     end
     module Quality
-      VALUES = [:native, :color, :grey, :bitonal]
+      VALUES = {native: nil, default: nil, color: nil, bitonal: :bitonal, grey: :grey, gray: :grey}
       def self.get(quality=:native)
         q = (quality || :native).to_sym
         raise BadRequest.new("bad quality #{quality}") unless VALUES.include? q
-        return (q == :native or q == :color) ? nil : q
+        return VALUES[q]
       end
       def self.convert(img, quality)
         q = get(quality)

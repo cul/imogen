@@ -6,10 +6,13 @@ describe Imogen::Iiif::Region, type: :unit do
   end
   subject {Imogen::Iiif::Region.new(@test_image)}
   describe "#get" do
-    describe "with default or full region" do
-      it "should return nil" do
+    describe "with named regions" do
+      it "should return nil for full or default" do
         expect(subject.get(nil)).to be_nil
         expect(subject.get("full")).to be_nil
+      end
+      it "should return symbol for featured" do
+        expect(subject.get("featured")).to eql(:featured)
       end
     end
     describe "with an absolute region" do

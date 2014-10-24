@@ -11,7 +11,7 @@ class Region < Transform
       return :featured
     elsif md = /^pct:(\d+(\.\d+)?),(\d+(\.\d+)?),(\d+(\.\d+)?),(\d+(\.\d+)?)$/.match(region)
       p = [Float(md[1]),Float(md[3]),Float(md[5]),Float(md[7])]
-      if p[0] == p[2] or p[1] == p[3]
+      if p[2] == 0 or p[3] == 0
         raise BadRequest.new("Invalid region: #{region}")
       end
       e = [
@@ -32,12 +32,12 @@ class Region < Transform
         min(@height,(p[1] + p[3]))
       ]
     else
-      raise BadRequest.new("Invalid region: #{region}")
+      raise BadRequest.new("Invalid region (syntax): #{region}")
     end
-    if e[0] > e[2] or e[1] > e[3]
-      raise BadRequest.new("Invalid region: #{region}")
-    end
-    if (e[2] - e[0]) * (e[3] - e[1]) < 100
+    if (e[0] > @width or e[1] > @height)
+      raise BadRequest.new("Invalid region (disjoint): #{region}")
+    end      
+    if (e[2]) * (e[3]) < 100
       raise BadRequest.new("Region too small: #{region}")
     end
     return e

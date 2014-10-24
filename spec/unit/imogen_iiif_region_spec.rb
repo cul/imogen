@@ -37,7 +37,7 @@ describe Imogen::Iiif::Region, type: :unit do
         expect(subject.get("pct:80,15,10,75")).to eql([140,20,158,118])
       end
       it "should reject zero-dimension boxes" do
-        expect{subject.get("pct:10.2,15,10.21,15")}.to raise_error Imogen::Iiif::BadRequest
+        expect{subject.get("pct:10.2,15,0,15")}.to raise_error Imogen::Iiif::BadRequest
       end
       describe "that exceeds the bounds" do
         it "should calculate an overlapping region" do
@@ -52,6 +52,12 @@ describe Imogen::Iiif::Region, type: :unit do
       expect{subject.get("px:1,2,3,4")}.to raise_error Imogen::Iiif::BadRequest
       expect{subject.get("-1,2,3,4")}.to raise_error Imogen::Iiif::BadRequest
       expect{subject.get("pct:-1,2,3,4")}.to raise_error Imogen::Iiif::BadRequest
-    end 
+    end
+    it "should work for some other image" do
+      img = ImageStub.new(1706,1726)
+      test = Imogen::Iiif::Region.new(img)
+      expect(test.get("1536,1024,190,512")).to eql([1536,1024,1706,1536])
+      expect{subject.get("1536,1024,190,512")}.to raise_error Imogen::Iiif::BadRequest
+    end
   end
 end

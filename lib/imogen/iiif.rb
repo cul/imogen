@@ -10,7 +10,7 @@ module Imogen
           @width = src.width
           @height = src.height
         else
-          raise "#{src.class.name} does not report width and height" 
+          raise "#{src.class.name} does not report width and height"
         end
       end
       def max(x,y)
@@ -43,8 +43,8 @@ module Imogen
     autoload :Rotation, 'imogen/iiif/rotation'
     autoload :Tiles, 'imogen/iiif/tiles'
 
-    FORMATS = {jpeg: 'jpg', jpg: 'jpg', png: 'png'}
-    EXTENSIONS = {'jpg' => :jpeg, 'png' => :png}
+    FORMATS = {jpeg: 'jpg', jpg: 'jpg', png: 'png', jp2: 'jp2'}
+    EXTENSIONS = {'jpg' => :jpeg, 'png' => :png, 'jp2' => :jp2}
     def self.convert(img, dest_path, format=nil, opts={})
       format ||= opts.fetch(:format,:jpeg)
       format = format.to_sym
@@ -56,9 +56,9 @@ module Imogen
               dst = FreeImage::File.new(dest_path)
               format = :jpeg if format == :jpg
               if (img.color_type == :rgb)
-                quality.convert_to_24bits {|result| dst.save(result, format)}
+                quality.convert_to_24bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0))}
               else
-                quality.convert_to_8bits {|result| dst.save(result, format)}
+                quality.convert_to_8bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0))}
               end
             end
           end

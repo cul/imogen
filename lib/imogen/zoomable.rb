@@ -13,7 +13,7 @@ module Imogen
     end
     def self.convert(img, dest_path)
       dst = FreeImage::File.new(dest_path)
-      dst.save(img, :jp2, 8)
+			dst.save(img, :jp2, 8)
     end
   end
 end

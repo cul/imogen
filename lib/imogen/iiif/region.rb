@@ -36,9 +36,6 @@ class Region < Transform
     end
     if (e[0] > @width or e[1] > @height)
       raise BadRequest.new("Invalid region (disjoint): #{region}")
-    end      
-    if (e[2]) * (e[3]) < 100
-      raise BadRequest.new("Region too small: #{region}")
     end
     return e
   end

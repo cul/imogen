@@ -18,6 +18,8 @@ describe Imogen::Iiif::Region, type: :unit do
     describe "with an absolute region" do
       it "should calculate a contained region" do
         expect(subject.get("80,15,60,75")).to eql([80,15,140,90])
+        # small regions are the application's concern
+        expect(subject.get("1,2,3,4")).to eql([1,2,4,6])
       end
       it "should reject zero-dimension boxes" do
         expect{subject.get("101,15,0,15")}.to raise_error Imogen::Iiif::BadRequest

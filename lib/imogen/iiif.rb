@@ -56,9 +56,9 @@ module Imogen
               dst = FreeImage::File.new(dest_path)
               format = :jpeg if format == :jpg
               if (img.color_type == :rgb)
-                quality.convert_to_24bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0))}
+                quality.convert_to_24bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0)); yield result if block_given?}
               else
-                quality.convert_to_8bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0))}
+                quality.convert_to_8bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0)); yield result if block_given?}
               end
             end
           end

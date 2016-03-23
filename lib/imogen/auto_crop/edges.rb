@@ -11,11 +11,11 @@ class Edges
     @yoffset = 0
     if src.is_a? FreeImage::Bitmap
       img = src
-      @xoffset = img.width.to_f/6
-      @yoffset = img.height.to_f/6
+      #@xoffset = img.width.to_f/6
+      #@yoffset = img.height.to_f/6
       if Imogen::AutoCrop::Box.squarish? img
-        @xoffset = @xoffset/2
-        @yoffset = @yoffset/2
+        #@xoffset = @xoffset/2
+        #@yoffset = @yoffset/2
       end
       @tempfile = Tempfile.new(['crop','.png'])
 
@@ -26,8 +26,15 @@ class Edges
     else
       raise src.class.name 
     end
-    # use bigger features on bigger images
-    @grayscale = CvMat.load(@tempfile.path, CV_LOAD_IMAGE_GRAYSCALE)
+    # use bigger features on bigger images?
+    # gaussian([p1 = 3, p2 = 3, p3 = 0.0, p4 = 0.0])
+    kernel = 3
+    cvmat = CvMat.load(@tempfile.path, CV_LOAD_IMAGE_COLOR)
+    gauss = cvmat.blur_gaussian(7,7,0.0,0.0,:border_complete)
+    gs = gauss.BGR2GRAY
+    # on a color image we can call BGR2GRAY
+    @grayscale =
+      gs.laplace(kernel).convert_scale_abs(:scale => 1, :shift => 0)
     @xrange = (0..@grayscale.cols)
     @yrange = (0..@grayscale.rows)
   end

@@ -9,6 +9,5 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/cul/imogen"
   spec.version = "0.1.6"
 
-  spec.add_dependency 'ruby-opencv'
   spec.add_development_dependency 'rspec'
 end

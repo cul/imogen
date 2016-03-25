@@ -30,11 +30,14 @@ class Edges
     # gaussian([p1 = 3, p2 = 3, p3 = 0.0, p4 = 0.0])
     kernel = 3
     cvmat = CvMat.load(@tempfile.path, CV_LOAD_IMAGE_COLOR)
-    gauss = cvmat.blur_gaussian(7,7,0.0,0.0,:border_complete)
+    #cvmat.save_image('orig.png')
+    gauss = cvmat.blur_gaussian(0,0,1.0,1.0)
+    #gauss.save_image('gauss.png')
     gs = gauss.BGR2GRAY
     # on a color image we can call BGR2GRAY
     @grayscale =
-      gs.laplace(kernel).convert_scale_abs(:scale => 1, :shift => 0)
+      gs.laplace(kernel).convert_scale_abs(:scale => 1.0, :shift => 0.0)
+    @grayscale.save_image('grayscale.png')
     @xrange = (0..@grayscale.cols)
     @yrange = (0..@grayscale.rows)
   end
@@ -45,7 +48,9 @@ class Edges
 
   # returns leftX, topY, rightX, bottomY
   def get(*args)
-    c = Imogen::AutoCrop::Box.info(@grayscale)
+    b = Imogen::AutoCrop::Box.boxer(@grayscale)
+    c = b.box
+    print_features(@grayscale, b.corners)
     r = c.radius.floor
     # adjust the box
     coords = [c.x, c.y]
@@ -69,6 +74,14 @@ class Edges
   end
   def unlink
     @tempfile.unlink
+  end
+  def print_features(img,features)
+    copy = img.GRAY2BGR
+    features.each do |feature|
+      point = CvPoint.new(feature.x, feature.y)
+      copy.circle!(point, 60, :color => CvColor::Red, :thickness => 6)
+    end
+    copy.save_image('features.png')
   end
 end
 end

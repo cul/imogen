@@ -3,8 +3,12 @@ require 'opencv'
 module Imogen::AutoCrop::Box
   include OpenCV
   class Best
+    attr_reader :center, :corners
     def initialize(grayscale)
-      @corners = grayscale.good_features_to_track(0.3, 1.0, block_size: 3, max: 20)
+      min_dim = grayscale.rows < grayscale.columns ? grayscale.rows : grayscale.columns
+      min_dist = min_dim.to_f / 50
+      quality_level = 0.4
+      @corners = grayscale.good_features_to_track(quality_level, min_dist, block_size: 3, max: 20)
       if @corners.nil? or @corners.length == 0
         @center = Center.new(grayscale)
       else
@@ -53,10 +57,12 @@ module Imogen::AutoCrop::Box
     end
   end
   class Center
+    attr_reader :center, :corners
     def initialize(grayscale)
       @center ||= [(grayscale.cols/2).floor, (grayscale.rows/2).floor]
       @radius = @center.min
       @ratio = @radius / @center.max
+      @corners = []
     end
     def box
       return BoxInfo.new(@center[0],@center[1],@radius)
@@ -85,8 +91,10 @@ module Imogen::AutoCrop::Box
       raise "#{img.class.name} is not a FreeImage::Bitmap"
     end
   end
+  def self.boxer(grayscale)
+    squarish?(grayscale) ? Center.new(grayscale) : Best.new(grayscale)
+  end
   def self.info(grayscale)
-    dims = [grayscale.cols, grayscale.rows]
-    squarish?(grayscale) ? Center.new(grayscale).box() : Best.new(grayscale).box()
+    boxer(grayscale).box()
   end
 end

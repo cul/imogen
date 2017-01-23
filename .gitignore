@@ -1,3 +1,5 @@
 debug
 Gemfile.lock
 *.komodoproject
+.DS_Store
+*~

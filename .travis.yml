@@ -1,6 +1,5 @@
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y opencv2.4 libfreeimage3 libfreeimage-dev
+  - sudo apt-get install -y libfreeimage3 libfreeimage-dev
   - sudo apt-get install -y libcv-dev libopencv-dev libopencv-contrib-dev libopencv-photo-dev libopencv-imgproc-dev
   - gem install bundler -v 1.9.10
 script: rspec

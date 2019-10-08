@@ -4,11 +4,13 @@ Gem::Specification.new do |spec|
   spec.authors = ["Ben Armintor"]
   spec.email = "armintor@gmail.com"
   spec.require_paths = ["lib"]
-  spec.files = Dir.glob("{lib,spec}/**/*")
+  spec.files = ['ext/opencv/opencv.cpp'] + Dir.glob("{lib,spec,ext/opencv}/**/*")
   spec.summary = "derivative generation via FreeImage and smart square thumbnail via OpenCV"
   spec.homepage    = "https://github.com/cul/imogen"
   spec.version = "0.1.8"
 
-  spec.add_dependency 'ruby-opencv'
   spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rice'
+  spec.add_development_dependency 'rake-compiler'
+  spec.extensions = ['ext/opencv/extconf.rb']
 end

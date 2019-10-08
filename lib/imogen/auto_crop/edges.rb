@@ -1,11 +1,11 @@
 #!ruby
-require 'opencv'
+require 'imogencv'
 require 'free-image'
 require 'tempfile'
 
 module Imogen::AutoCrop
 class Edges
-  include OpenCV
+  include ImogenCV
   def initialize(src)
     @xoffset = 0
     @yoffset = 0

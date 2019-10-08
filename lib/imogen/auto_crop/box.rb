@@ -1,7 +1,7 @@
 #!ruby
 require 'opencv'
 module Imogen::AutoCrop::Box
-  include OpenCV
+  include ImogenCV
   class Best
     def initialize(grayscale)
       @corners = grayscale.good_features_to_track(0.3, 1.0, block_size: 3, max: 20)

@@ -1,5 +1,9 @@
 debug
+tmp
 Gemfile.lock
+*.bundle
+*.gem
 *.komodoproject
 .DS_Store
 *~
+Makefile

@@ -27,7 +27,7 @@ class Edges
       raise src.class.name 
     end
     # use bigger features on bigger images
-    @grayscale = CvMat.load(@tempfile.path, CV_LOAD_IMAGE_GRAYSCALE)
+    @grayscale = ImogenCV::Mat.load_grayscale(@tempfile.path)
     @xrange = (0..@grayscale.cols)
     @yrange = (0..@grayscale.rows)
   end

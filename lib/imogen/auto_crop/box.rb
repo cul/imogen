@@ -1,10 +1,11 @@
 #!ruby
-require 'opencv'
+require 'imogencv'
 module Imogen::AutoCrop::Box
   include ImogenCV
   class Best
     def initialize(grayscale)
-      @corners = grayscale.good_features_to_track(0.3, 1.0, block_size: 3, max: 20)
+      # mat_good_features_to_track(std::int maxCorners, std::double qualityLevel, std:double minDistance, std::int blockSize, std::bool useHarrisDetector, std::double k)
+      @corners = grayscale.good_features_to_track(20, 0.3, 1.0, 3, false, 0.04)
       if @corners.nil? or @corners.length == 0
         @center = Center.new(grayscale)
       else
@@ -77,7 +78,7 @@ module Imogen::AutoCrop::Box
       dims = [img.width, img.height]
       ratio = dims.min.to_f / dims.max
       return ratio >= BoxInfo::SQUARISH
-    elsif img.is_a? OpenCV::CvMat
+    elsif img.is_a? ImogenCV::Mat
       dims = [img.cols, img.rows]
       ratio = dims.min.to_f / dims.max
       return ratio >= BoxInfo::SQUARISH

@@ -3,10 +3,8 @@ module Iiif
 class Rotation < Transform
   RIGHT_ANGLES = [0,90,180,270]
   def get(rotate)
-    if rotate.nil? or rotate.eql? '0'
-      return nil
-    end
-    raise BadRequest.new("bad rotate #{rotate}") unless rotate =~ /^-?\d+$/
+    return nil if [nil, 0, '0'].include?(rotate)
+    raise BadRequest.new("bad rotate #{rotate}") unless rotate.to_s =~ /^-?\d+$/
     # negate offset because IIIF spec counts clockwise, FreeImage counterclockwise
     r = (rotate.to_i * -1) % 360
     r = r + 360 if r < 0

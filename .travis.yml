@@ -1,6 +1,6 @@
 before_install:
   - sudo apt-get install -y libfreeimage3 libfreeimage-dev
-  - sudo apt-get install -y libcv-dev libopencv-dev libopencv-contrib-dev libopencv-photo-dev libopencv-imgproc-dev
+  - sudo apt-get install -y python-opencv
   - gem install bundler -v 1.9.10
 install:
   - bundle install

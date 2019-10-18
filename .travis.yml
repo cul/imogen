@@ -1,8 +1,9 @@
 before_install:
-  - sudo apt-get install -y libfreeimage3 libfreeimage-dev
-  - sudo apt-get install -y python-opencv
+  - sudo add-apt-repository ppa:lkoppel/opencv -y
   - gem install bundler -v 1.9.10
 install:
+  - sudo apt-get install -y libfreeimage3 libfreeimage-dev
+  - sudo apt-get install -y libopencv-dev
   - bundle install
   - bundle exec rake compile
 script: rspec

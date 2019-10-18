@@ -30,7 +30,9 @@ incdir, libdir = dir_config("opencv", '/usr/local/include/opencv', '/usr/local/l
 opencv_header = 'opencv2/features2d.hpp'
 unless find_header(opencv_header, incdir) || find_header(opencv_header, incdir4)
 	puts "find_header failed (opencv4)"
-	unless add_flags_if_header(opencv_header, incdir4, libdir4) || add_flags_if_header(opencv_header, incdir, libdir)
+	unless add_flags_if_header(opencv_header, incdir4, libdir4) ||
+		add_flags_if_header(opencv_header, incdir, libdir) ||
+		add_flags_if_header(opencv_header, '/usr/local/include', '/usr/local/lib')
 		exit 1
 	end
 end

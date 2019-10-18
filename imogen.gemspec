@@ -12,5 +12,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rice'
   spec.add_development_dependency 'rake-compiler'
-  spec.extensions = ['ext/opencv/extconf.rb']
+  spec.extensions = ['ext/imogencv/extconf.rb']
 end

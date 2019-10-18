@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/cul/imogen"
   spec.version = "0.1.8"
 
+  spec.add_dependency 'rice'
   spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'rice'
   spec.add_development_dependency 'rake-compiler'
   spec.extensions = ['ext/imogencv/extconf.rb']
 end

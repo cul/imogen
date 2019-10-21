@@ -13,7 +13,7 @@ addons:
 before_install:
   - gem install bundler -v 1.9.10
 install:
-  - "[ $CXX = g++ ] && export CXX=g++-6 || true"
+  - "[ $CXX = g++ ] && export CXX=g++-7 || true"
   - bundle install
   - bundle exec rake compile -- --with-opencv4-include=/usr/include --with-opencv4-lib=/usr/lib
 script: rspec

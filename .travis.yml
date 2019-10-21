@@ -1,6 +1,6 @@
 dist: bionic
 language: ruby
-compiler: g++
+compiler: gcc
 addons:
   apt:
     packages:

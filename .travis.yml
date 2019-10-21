@@ -4,14 +4,12 @@ compiler: g++
 addons:
   apt:
     packages:
-      - g++-7
       - libfreeimage3
       - libfreeimage-dev
       - libopencv-dev
 before_install:
   - gem install bundler -v 1.9.10
 install:
-  - "[ $CXX = g++ ] && export CXX=g++-7 || true"
   - bundle install
   - bundle exec rake compile -- --with-opencv4-include=/usr/include --with-opencv4-lib=/usr/lib
 script: rspec

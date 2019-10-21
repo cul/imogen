@@ -1,10 +1,8 @@
 dist: bionic
-language: cpp
+language: c++
 compiler: gcc
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
       - g++-7
       - libfreeimage3

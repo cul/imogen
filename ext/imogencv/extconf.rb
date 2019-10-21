@@ -3,7 +3,7 @@ require 'mkmf-rice'
 osx = RbConfig::CONFIG['target_os'] =~ /darwin/
 
 if osx
-	$CFLAGS << " " << '-std=c++14' # damn the torpedoes!
+	$CFLAGS << " " << '-x c++ -std=c++14' # damn the torpedoes!
 end
 
 def real_inc_dir(src)
@@ -43,6 +43,8 @@ unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compac
 
 	unless tried and add_flags_if_header(opencv_header, incdir, libdir)
 		puts "Cannot find required header: #{opencv_header}"
+		puts "if this output is from rake compile, consider adding:"
+		puts "rake compile -- --with-opencv4-include=DIR"
 		exit 1
 	end
 end

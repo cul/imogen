@@ -39,10 +39,12 @@ unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compac
 	header_path = File.join(incdir, opencv_header)
 	exist = File.exist?(header_path)
 	puts "header exist at #{header_path} : #{exist}"
-	$VERBOSE = 1
 	tried = try_header(cpp_include(opencv_header), "-I#{incdir}".quote)
 
 	unless tried and add_flags_if_header(opencv_header, incdir, libdir)
+		open(MakeMakefile::Logging.instance_variable_get(:@logfile), 'r') do |logblob|
+			logblob.each { |logline| puts logline.strip }
+		end
 		puts "Cannot find required header: #{opencv_header}"
 		puts "if this output is from rake compile, consider adding:"
 		puts "rake compile -- --with-opencv4-include=DIR"

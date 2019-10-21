@@ -3,9 +3,9 @@ require 'mkmf-rice'
 osx = RbConfig::CONFIG['target_os'] =~ /darwin/
 
 if osx
-	$CFLAGS << " -x c++-header -std=c++14"# damn the torpedoes!
+	$CFLAGS << " -x c++ -std=c++14"# damn the torpedoes!
 else
-	$CFLAGS << " -x c++-header"
+	$CFLAGS << " -x c++"
 end
 
 def real_inc_dir(src)

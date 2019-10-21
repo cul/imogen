@@ -3,9 +3,9 @@ require 'mkmf-rice'
 osx = RbConfig::CONFIG['target_os'] =~ /darwin/
 
 if osx
-	$CFLAGS << " -x c++ -std=c++14"# damn the torpedoes!
+	$CFLAGS << " -x c++-header -std=c++14"# damn the torpedoes!
 else
-	$CFLAGS << " -std=c++14"
+	$CFLAGS << " -x c++-header"
 end
 
 def real_inc_dir(src)
@@ -30,7 +30,7 @@ incdir_default = "/usr/local/include"
 libdir_default = "/usr/local/lib"
 
 have_library('stdc++')
-MakeMakefile::CONFTEST_C = "#{CONFTEST}.cc"
+# MakeMakefile::CONFTEST_C = "#{CONFTEST}.cc"
 
 # expect to call with --with-opencv4-include=DIR and --with-opencv4-lib=DIR
 incdir, libdir = dir_config("opencv4", incdir_default, libdir_default)

@@ -29,6 +29,8 @@ end
 incdir_default = "/usr/local/include"
 libdir_default = "/usr/local/lib"
 
+have_library('stdc++')
+
 # expect to call with --with-opencv4-include=DIR and --with-opencv4-lib=DIR
 incdir, libdir = dir_config("opencv4", incdir_default, libdir_default)
 unless incdir && incdir != incdir_default
@@ -36,9 +38,6 @@ unless incdir && incdir != incdir_default
 end
 
 opencv_header = 'opencv2/features2d.hpp'
-
-# use c++ for the header tests
-MakeMakefile::CXX_EXT << 'i'
 
 unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compact.uniq)
 	header_path = File.join(incdir, opencv_header)

@@ -30,6 +30,7 @@ incdir_default = "/usr/local/include"
 libdir_default = "/usr/local/lib"
 
 have_library('stdc++')
+MakeMakefile::CONFTEST_C = "#{CONFTEST}.cc"
 
 # expect to call with --with-opencv4-include=DIR and --with-opencv4-lib=DIR
 incdir, libdir = dir_config("opencv4", incdir_default, libdir_default)

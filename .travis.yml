@@ -1,6 +1,5 @@
 dist: bionic
 language: ruby
-compiler: g++
 addons:
   apt:
     packages:
@@ -8,7 +7,6 @@ addons:
       - libfreeimage-dev
       - libopencv-dev
 before_install:
-  - export LD_LIBRARY_PATH=`rvm config-get libdir`:$LD_LIBRARY_PATH
   - gem install bundler -v 1.9.10
 install:
   - bundle install

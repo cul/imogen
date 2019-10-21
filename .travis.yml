@@ -1,14 +1,19 @@
 dist: bionic
-language: generic
+language: cpp
+compiler: gcc
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
+      - g++-6
       - libfreeimage3
       - libfreeimage-dev
       - libopencv-dev
 before_install:
   - gem install bundler -v 1.9.10
 install:
+  - "[ $CXX = g++ ] && export CXX=g++-6 || true"
   - bundle install
   - bundle exec rake compile -- --with-opencv4-include=/usr/include --with-opencv4-lib=/usr/lib
 script: rspec

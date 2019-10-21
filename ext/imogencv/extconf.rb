@@ -37,6 +37,9 @@ end
 
 opencv_header = 'opencv2/features2d.hpp'
 
+# use c++ for the header tests
+MakeMakefile::CXX_EXT << 'i'
+
 unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compact.uniq)
 	header_path = File.join(incdir, opencv_header)
 	exist = File.exist?(header_path)

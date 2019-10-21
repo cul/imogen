@@ -39,6 +39,7 @@ unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compac
 	header_path = File.join(incdir, opencv_header)
 	exist = File.exist?(header_path)
 	puts "header exist at #{header_path} : #{exist}"
+	$VERBOSE = 1
 	tried = try_header(cpp_include(opencv_header), "-I#{incdir}".quote)
 
 	unless tried and add_flags_if_header(opencv_header, incdir, libdir)

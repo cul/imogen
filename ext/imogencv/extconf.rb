@@ -32,30 +32,32 @@ libdir_default = "/usr/local/lib"
 have_library('stdc++')
 # MakeMakefile::CONFTEST_C = "#{CONFTEST}.cc"
 
+# with --with-opencv4-config=FILEPATH
+opencv4_config = pkg_config('opencv4').detect { |c| c =~ /\-L\/\w+/ }
+
 # expect to call with --with-opencv4-include=DIR and --with-opencv4-lib=DIR
 incdir, libdir = dir_config("opencv4", incdir_default, libdir_default)
-unless incdir && incdir != incdir_default
-	puts "using default opencv4 include path: #{incdir}"
+
+unless !opencv4_config && incdir && incdir != incdir_default
+	puts "using default opencv4 include path: #{incdir_default}"
+end
+
+unless !opencv4_config && libdir && libdir != libdir_default
+	puts "using default opencv4 library path: #{incdir_default}"
 end
 
 opencv_header = 'opencv2/features2d.hpp'
 
 unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compact.uniq)
-	header_path = File.join(incdir, opencv_header)
-	exist = File.exist?(header_path)
-	puts "header exist at #{header_path} : #{exist}"
-	tried = try_header(cpp_include(opencv_header), "-I#{incdir}".quote)
-
-	unless tried and add_flags_if_header(opencv_header, incdir, libdir)
-		open(MakeMakefile::Logging.instance_variable_get(:@logfile), 'r') do |logblob|
-			logblob.each { |logline| puts logline.strip }
-		end
-		puts "Cannot find required header: #{opencv_header}"
-		puts "if this output is from rake compile, consider adding:"
-		puts "rake compile -- --with-opencv4-include=DIR"
-		exit 1
+	open(MakeMakefile::Logging.instance_variable_get(:@logfile), 'r') do |logblob|
+		logblob.each { |logline| puts logline.strip }
 	end
+	puts "Cannot find required header: #{opencv_header}"
+	puts "if this output is from rake compile, consider adding:"
+	puts "rake compile -- --with-opencv4-include=DIR"
+	exit 1
 end
+
 required_libs = [
 	'opencv_core',
 	'opencv_imgcodecs',

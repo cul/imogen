@@ -33,7 +33,7 @@ have_library('stdc++')
 # MakeMakefile::CONFTEST_C = "#{CONFTEST}.cc"
 
 # with --with-opencv4-config=FILEPATH
-opencv4_config = pkg_config('opencv4').detect { |c| c =~ /\-L\/\w+/ }
+opencv4_config = (pkg_config('opencv4') || []).detect { |c| c =~ /\-L\/\w+/ }
 
 # expect to call with --with-opencv4-include=DIR and --with-opencv4-lib=DIR
 incdir, libdir = dir_config("opencv4", incdir_default, libdir_default)

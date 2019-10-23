@@ -56,6 +56,18 @@ unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compac
 		exit 1
 	end
 end
+required_libs = [
+	'opencv_core',
+	'opencv_imgcodecs',
+	'opencv_imgproc',
+	'opencv_features2d'
+]
+required_libs.each do |lib|
+	unless find_library(lib, nil, *[libdir, libdir_default, "/usr/local"].compact.uniq)
+		puts "Cannot find required lib: #{lib}"
+		exit 1
+	end
+end
 
 append_cflags('-stdlib=libc++')
 @libdir_basename ||= 'lib'

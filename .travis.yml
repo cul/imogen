@@ -6,7 +6,6 @@ addons:
       - libfreeimage3
       - libfreeimage-dev
       - libopencv-dev
-      - libjasper-dev
 before_install:
   - gem install bundler -v 1.9.10
 install:

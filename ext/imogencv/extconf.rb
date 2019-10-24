@@ -48,7 +48,7 @@ required_libs['libwebp'] = ['webp']
 required_libs['libjpeg'] = ['jpeg']
 required_libs['libtiff-4'] = ['tiff']
 required_libs['libpng'] = ['png16']
-required_libs['jasper'] = ['jasper']
+required_libs['jasper'] = [] # just run pkg-config if you can
 required_libs['OpenEXR'] = ['IlmImf']
 
 all_deps = (required_libs.keys | required_headers.keys).sort.uniq
@@ -63,7 +63,7 @@ all_deps.each do |dep_key|
 	end
 
 	unless !has_pkg_config && libdir && libdir != libdir_default
-		puts "using default #{dep_key} library path: #{incdir_default}"
+		puts "using default #{dep_key} library path: #{libdir_default}"
 	end
 
 	include_paths = [incdir_default, "/usr/local"]

@@ -35,8 +35,8 @@ have_library('stdc++')
 # with --with-opencv4-config=FILEPATH
 opencv4_config = (pkg_config('opencv4') || []).detect { |c| c =~ /\-L\/\w+/ }
 
-# expect to call with --with-opencv4-include=DIR and --with-opencv4-lib=DIR
-incdir, libdir = dir_config("opencv4", incdir_default, libdir_default)
+# expect to call with --with-opencv4-include=DIR and --with-opencv4-lib=DIR or --withopencv4-dir=DIR
+incdir, libdir = dir_config("opencv4", incdir_default, libdir_default) unless opencv4_config
 
 unless !opencv4_config && incdir && incdir != incdir_default
 	puts "using default opencv4 include path: #{incdir_default}"
@@ -46,9 +46,12 @@ unless !opencv4_config && libdir && libdir != libdir_default
 	puts "using default opencv4 library path: #{incdir_default}"
 end
 
+include_paths = [incdir_default, "/usr/local"]
+include_paths = ([incdir, File.join(incdir, "opencv4")] | include_paths) if incdir
+
 opencv_header = 'opencv2/features2d.hpp'
 
-unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compact.uniq)
+unless find_header(opencv_header, *include_paths.compact.uniq)
 	open(MakeMakefile::Logging.instance_variable_get(:@logfile), 'r') do |logblob|
 		logblob.each { |logline| puts logline.strip }
 	end
@@ -58,6 +61,9 @@ unless find_header(opencv_header, *[incdir, incdir_default, "/usr/local"].compac
 	exit 1
 end
 
+lib_paths = [libdir_default, "/usr/local"]
+lib_paths.unshift(libdir) if libdir
+
 required_libs = [
 	'opencv_core',
 	'opencv_imgcodecs',
@@ -65,7 +71,7 @@ required_libs = [
 	'opencv_features2d'
 ]
 required_libs.each do |lib|
-	unless find_library(lib, nil, *[libdir, libdir_default, "/usr/local"].compact.uniq)
+	unless find_library(lib, nil, *lib_paths.compact.uniq)
 		puts "Cannot find required lib: #{lib}"
 		exit 1
 	end

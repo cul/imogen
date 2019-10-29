@@ -9,6 +9,7 @@ module Imogen::AutoCrop
     def initialize(src)
       @xoffset = 0
       @yoffset = 0
+      tempfile = nil
       if src.is_a? FreeImage::Bitmap
         img = src
         @xoffset = img.width.to_f/6
@@ -17,19 +18,21 @@ module Imogen::AutoCrop
           @xoffset = @xoffset/2
           @yoffset = @yoffset/2
         end
-        @tempfile = Tempfile.new(['crop','.png'])
+        tempfile = Tempfile.new(['crop','.png'])
 
         img.copy(@xoffset,@yoffset,img.width-@xoffset,img.height-@yoffset) do |crop|
-          crop.save(@tempfile.path, :png)
+          crop.save(tempfile.path, :png)
           crop.free
         end
       else
         raise src.class.name
       end
       # use bigger features on bigger images
-      @grayscale = ImogenCV::Mat.load_grayscale(@tempfile.path)
+      @grayscale = ImogenCV::Mat.load_grayscale(tempfile.path)
       @xrange = (0..@grayscale.cols)
       @yrange = (0..@grayscale.rows)
+    ensure
+      tempfile.unlink if tempfile
     end
 
     def bound_min(center)
@@ -59,9 +62,6 @@ module Imogen::AutoCrop
       c = coords
 
       return [c[0]-r, c[1]-r, c[0]+r, c[1] + r]
-    end
-    def unlink
-      @tempfile.unlink
     end
   end
 end

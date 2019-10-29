@@ -46,11 +46,7 @@ class Region < Transform
     else
       if edges == :featured
         frame = Imogen::AutoCrop::Edges.new(img)
-        begin
-          edges = frame.get([img.width, img.height,768].min)
-        ensure
-          frame.unlink
-        end
+        edges = frame.get([img.width, img.height,768].min)
       end
       img.copy(*edges) {|crop| yield crop}
     end

@@ -90,6 +90,7 @@ all_deps.each do |dep_key|
 			exit 1
 		end
 	end
+	append_cflags(lib_paths.compact.uniq.map {|x| "-L#{x}"}.join(' '))
 end
 
 append_cflags('-stdlib=libc++')

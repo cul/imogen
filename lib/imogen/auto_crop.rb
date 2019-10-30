@@ -14,7 +14,6 @@ module Imogen
           thumb.free
         end
       end
-      frame.unlink
     end
   end
 end

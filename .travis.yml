@@ -1,6 +1,18 @@
+dist: bionic
+language: ruby
+addons:
+  apt:
+    packages:
+      - libfreeimage3
+      - libfreeimage-dev
+      - libopencv-dev
+      - libtiff-dev
+      - libjpeg-dev
+      - libwebp-dev
+      - libpng-dev
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y opencv2.4 libfreeimage3 libfreeimage-dev
-  - sudo apt-get install -y libcv-dev libopencv-dev libopencv-contrib-dev libopencv-photo-dev libopencv-imgproc-dev
   - gem install bundler -v 1.9.10
+install:
+  - bundle install
+  - bundle exec rake compile -- --with-opencv4-include=/usr/include --with-opencv4-lib=/usr/lib
 script: rspec

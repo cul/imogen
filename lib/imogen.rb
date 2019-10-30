@@ -105,3 +105,4 @@ module Imogen
     end
   end
 end
+require 'imogencv'

@@ -35,7 +35,7 @@ class Size < Transform
   def self.convert(img, size)
     dims = Size.new(img).get(size)
     if dims
-      img.rescale(*dims) {|crop| yield crop}
+      yield img.thumbnail_image(dims[0], height: dims[1])
     else
       yield img
     end

@@ -3,16 +3,9 @@ language: ruby
 addons:
   apt:
     packages:
-      - libfreeimage3
-      - libfreeimage-dev
-      - libopencv-dev
-      - libtiff-dev
-      - libjpeg-dev
-      - libwebp-dev
-      - libpng-dev
+      - libvips
 before_install:
   - gem install bundler -v 1.9.10
 install:
   - bundle install
-  - bundle exec rake compile -- --with-opencv4-include=/usr/include --with-opencv4-lib=/usr/lib
 script: rspec

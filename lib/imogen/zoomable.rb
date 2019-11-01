@@ -12,8 +12,7 @@ module Imogen
       return Math.log2(dims[0..1].max.to_f / tile_size).ceil
     end
     def self.convert(img, dest_path)
-      dst = FreeImage::File.new(dest_path)
-			dst.save(img, :jp2, 8)
+      raise "jp2 output conversion not implemented"
     end
   end
 end

@@ -5,16 +5,15 @@ class Rotation < Transform
   def get(rotate)
     return nil if [nil, 0, '0'].include?(rotate)
     raise BadRequest.new("bad rotate #{rotate}") unless rotate.to_s =~ /^-?\d+$/
-    # negate offset because IIIF spec counts clockwise, FreeImage counterclockwise
-    r = (rotate.to_i * -1) % 360
-    r = r + 360 if r < 0
+    # libvips and IIIF spec counts clockwise
+    r = rotate.to_i % 360
     raise BadRequest.new("bad rotate #{rotate}") unless RIGHT_ANGLES.include? r
     return r > 0 ? r : nil
   end
   def self.convert(img, rotate)
     rotation = Rotation.new(img).get(rotate)
     if rotation
-      img.rotate(rotation) {|crop| yield crop}
+      yield img.rot("d#{rotation}")
     else
       yield img
     end

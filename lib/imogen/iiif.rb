@@ -30,9 +30,9 @@ module Imogen
       def self.convert(img, quality)
         q = get(quality)
         if q == :grey
-          img.convert_to_greyscale {|c| yield c}
+          yield img.copy(interpretation: :b_w)
         elsif q == :bitonal
-          img.threshold(128) {|c| yield c}
+          yield img.copy(interpretation: :b_w) > 128
         else
           yield img
         end
@@ -53,13 +53,8 @@ module Imogen
         Size.convert(region, opts[:size]) do |size|
           Rotation.convert(size, opts[:rotation]) do |rotation|
             Quality.convert(rotation, opts[:quality]) do |quality|
-              dst = FreeImage::File.new(dest_path)
-              format = :jpeg if format == :jpg
-              if (img.color_type == :rgb)
-                quality.convert_to_24bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0)); yield result if block_given?}
-              else
-                quality.convert_to_8bits {|result| dst.save(result, format, (format == :jp2 ? 8 : 0)); yield result if block_given?}
-              end
+              quality.write_to_file(dest_path)
+              yield quality if block_given?
             end
           end
         end

@@ -1,5 +1,4 @@
 #!ruby
-
 module Imogen
 module Iiif
 class Region < Transform
@@ -45,10 +44,55 @@ class Region < Transform
       yield img
     else
       if edges == :featured
-        frame = Imogen::AutoCrop::Edges.new(img)
-        edges = frame.get([img.width, img.height,768].min)
+        side = [img.width, img.height,768].min
+        Featured.convert(img, side) { |x| yield x }
+      else
+        # edges are leftX, topY, rightX, bottomY
+        # Vips wants left, top, width, height
+        yield img.extract_area(edges[0], edges[1], edges[2] - edges[0], edges[3] - edges[1])
       end
-      img.copy(*edges) {|crop| yield crop}
+    end
+  end
+  class Featured < Transform
+    SQUARISH = 5.to_f / 6
+    ONE_THIRD = 1.to_f / 3
+    def self.convert(img, scale = 768, opts = {})
+      middle_dims = [(img.width * 2 * ONE_THIRD).floor, (img.height * 2 * ONE_THIRD).floor]
+      x_offset = (img.width * ONE_THIRD/2).floor
+      y_offset = (img.height * ONE_THIRD/2).floor
+      crop_scale = middle_dims.min
+      smart_crop_opts = {interesting: (squarish?(img) ? :centre : :entropy)}.merge(opts)
+      window = img.extract_area(x_offset, y_offset, middle_dims[0], middle_dims[1])
+      smartcrop = window.smartcrop(crop_scale, crop_scale, smart_crop_opts)
+      # Vips counts with negative offsets from left and top
+      yield smartcrop.thumbnail_image(scale, height: scale)
+    end
+
+    # returns leftX, topY, rightX, bottomY
+    def self.get(img, scale = 768, opts = {})
+      middle_dims = [(img.width * 2 * ONE_THIRD).floor, (img.height * 2 * ONE_THIRD).floor]
+      x_offset = (img.width * ONE_THIRD/2).floor
+      y_offset = (img.height * ONE_THIRD/2).floor
+      crop_scale = middle_dims.min
+      smart_crop_opts = {interesting: (squarish?(img) ? :centre : :entropy)}.merge(opts)
+      window = img.extract_area(x_offset, y_offset, middle_dims[0], middle_dims[1])
+      smartcrop = window.smartcrop(crop_scale, crop_scale, smart_crop_opts)
+      # Vips counts with negative offsets from left and top
+      left = (window.xoffset + smartcrop.xoffset)*-1
+      top = (window.yoffset + smartcrop.yoffset)*-1
+      right = left + smartcrop.width
+      bottom = top + smartcrop.height
+      return [left, top, right, bottom]
+    end
+
+    def self.squarish?(img)
+      if img.is_a? Vips::Image
+        dims = [img.width, img.height]
+        ratio = dims.min.to_f / dims.max
+        return ratio >= Featured::SQUARISH
+      else
+        raise "#{img.class.name} is not a Vips::Image"
+      end
     end
   end
 end

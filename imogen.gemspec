@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |spec|
   spec.name = 'imogen'
-  spec.authors = ["Ben Armintor"]
+  spec.authors = ["Ben Armintor", "Eric O'Hanlon"]
   spec.email = "armintor@gmail.com"
   spec.require_paths = ["lib"]
   spec.files = Dir.glob("{lib,spec}/**/*")

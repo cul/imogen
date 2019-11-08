@@ -1,5 +1,5 @@
 # imogen
-derivative generation via FreeImage and smart square thumbnail via OpenCV
+derivative generation and smart square thumbnail via libvips
 
 ## Scale and re-format an image
 ```ruby
@@ -8,8 +8,15 @@ derivative generation via FreeImage and smart square thumbnail via OpenCV
     Imogen::Scaled.convert(img, 'example-150.jpg', 150)
   end
 ```
-## Use OpenCV's "Interesting Region" detection
+## Perform "interesting region" detection
 ```ruby
+  Imogen.with_image('example.tiff') do |img|
+    # get the crop area of an "interesting region" of an image
+    left_x, top_y, right_x, bottom_y = Imogen::Iiif::Region::Featured.get(img, 768)
+  end
+
+  # or
+
   Imogen.with_image('example.tiff') do |img|
     Imogen::AutoCrop.convert(img, 'example-150-square.jpg', 150)
   end

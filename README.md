@@ -18,7 +18,7 @@ derivative generation via FreeImage and smart square thumbnail via OpenCV
 ## Convert according to IIIF parameters
 ```ruby
   Imogen.with_image('example.tiff') do |img|
-    Imogen::Iiif.convert(img, 'example-iiif-region.jpg', region: '80,15,60,75', size: '!5,5', quality: 'gray')
+    Imogen::Iiif.convert(img, 'example-iiif-region.jpg', 'jpg', region: '50,60,500,800', size: '!100,100', quality: 'color', rotation: 90)
   end
 ```
 ## Build IIIF parameters for a DZI-style tileset

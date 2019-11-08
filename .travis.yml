@@ -1,11 +1,15 @@
 dist: bionic
 language: ruby
-addons:
-  apt:
-    packages:
-      - libvips
+
+cache:
+    directories:
+     - /tmp/vips-install
+
 before_install:
-  - gem install bundler -v 1.9.10
+  - gem install bundler
+  - travis/install-vips-bionic.sh
+
 install:
   - bundle install
+
 script: rspec

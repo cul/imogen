@@ -7,29 +7,37 @@ describe Imogen::Iiif::Rotation, type: :unit do
   subject {Imogen::Iiif::Rotation.new(@test_image)}
   describe "#get" do
     describe "with values mod 360 in 90 degree rotations" do
-      it "should nil for 0 or '0' or nil" do
-        expect(subject.get(0)).to be_nil
-        expect(subject.get(360)).to be_nil
-        expect(subject.get("360")).to be_nil
-        expect(subject.get("-360")).to be_nil
-        expect(subject.get("0")).to be_nil
-        expect(subject.get(nil)).to be_nil
+      it "should return [0, false] angle and flip for 0 or '0' or nil" do
+        expect(subject.get(0)).to eq([0, false])
+        expect(subject.get(360)).to eq([0, false])
+        expect(subject.get("360")).to eq([0, false])
+        expect(subject.get("-360")).to eq([0, false])
+        expect(subject.get("0")).to eq([0, false])
+        expect(subject.get(nil)).to eq([0, false])
       end
-      # IIIF rotation is opposite FreeImage
-      it "should calculate for positive values" do
-        expect(subject.get(90)).to eql(90)
-        expect(subject.get("90")).to eql(90)
-        expect(subject.get("180")).to eql(180)
-        expect(subject.get("270")).to eql(270)
-        expect(subject.get("450")).to eql(90)
+      it "should return the expected angle and flip for positive values" do
+        expect(subject.get(90)).to eql([90, false])
+        expect(subject.get("90")).to eql([90, false])
+        expect(subject.get("180")).to eql([180, false])
+        expect(subject.get("270")).to eql([270, false])
+        expect(subject.get("450")).to eql([90, false])
       end
-      # IIIF rotation is opposite FreeImage
-      it "should calculate for negative values" do
-        expect(subject.get(-90)).to eql(270)
-        expect(subject.get("-90")).to eql(270)
-        expect(subject.get("-180")).to eql(180)
-        expect(subject.get("-270")).to eql(90)
-        expect(subject.get("-450")).to eql(270)
+      it "should return the expected angle and flip for negative values" do
+        expect(subject.get(-90)).to eql([270, false])
+        expect(subject.get("-90")).to eql([270, false])
+        expect(subject.get("-180")).to eql([180, false])
+        expect(subject.get("-270")).to eql([90, false])
+        expect(subject.get("-450")).to eql([270, false])
+      end
+      it "should return the expected angle and flip for string values that start with an exclamation point" do
+        expect(subject.get("!0")).to eql([0, true])
+        expect(subject.get("!90")).to eql([90, true])
+        expect(subject.get("!180")).to eql([180, true])
+        expect(subject.get("!270")).to eql([270, true])
+        expect(subject.get("!-90")).to eql([270, true])
+        expect(subject.get("!-180")).to eql([180, true])
+        expect(subject.get("!-270")).to eql([90, true])
+        expect(subject.get("!-450")).to eql([270, true])
       end
     end
     it "should reject arbitrary integer and float values" do

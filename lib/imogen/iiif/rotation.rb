@@ -3,20 +3,24 @@ module Imogen
     class Rotation < Transform
       RIGHT_ANGLES = [0,90,180,270]
       def get(rotate)
-        return nil if [nil, 0, '0'].include?(rotate)
-        raise BadRequest.new("bad rotate #{rotate}") unless rotate.to_s =~ /^-?\d+$/
+        return [0, false] if rotate.nil?
+        original_rotate_value = rotate
+        rotate = rotate.to_s
+        raise BadRequest.new("bad rotate #{original_rotate_value}") unless rotate =~ /^!?-?\d+$/
+        flip = rotate.to_s.start_with?('!')
         # libvips and IIIF spec counts clockwise
-        r = rotate.to_i % 360
-        raise BadRequest.new("bad rotate #{rotate}") unless RIGHT_ANGLES.include? r
-        return r > 0 ? r : nil
+        angle = rotate.sub(/^!/, '').to_i % 360
+        raise BadRequest.new("bad rotate #{original_rotate_value}") unless RIGHT_ANGLES.include?(angle)
+        return angle, flip
       end
+
       def self.convert(img, rotate)
-        rotation = Rotation.new(img).get(rotate)
-        if rotation
-          yield img.rot("d#{rotation}")
-        else
-          yield img
-        end
+        angle, flip = Rotation.new(img).get(rotate)
+        # IIIF spec applies horizontal flip ("mirrored by reflection on the vertical axis") before rotation
+        img = img.fliphor if flip
+        # No need to rotate if angle is zero
+        img = img.rot("d#{angle}") unless angle.zero?
+        yield img
       end
     end
   end

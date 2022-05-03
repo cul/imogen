@@ -63,7 +63,7 @@ class Region < Transform
       crop_scale = middle_dims.min
       smart_crop_opts = {interesting: (squarish?(img) ? :centre : :entropy)}.merge(opts)
       window = img.extract_area(x_offset, y_offset, middle_dims[0], middle_dims[1])
-      smartcrop = window.smartcrop(crop_scale, crop_scale, smart_crop_opts)
+      smartcrop = window.smartcrop(crop_scale, crop_scale, **smart_crop_opts)
       # Vips counts with negative offsets from left and top
       yield smartcrop.thumbnail_image(scale, height: scale)
     end
@@ -76,7 +76,7 @@ class Region < Transform
       crop_scale = middle_dims.min
       smart_crop_opts = {interesting: (squarish?(img) ? :centre : :entropy)}.merge(opts)
       window = img.extract_area(x_offset, y_offset, middle_dims[0], middle_dims[1])
-      smartcrop = window.smartcrop(crop_scale, crop_scale, smart_crop_opts)
+      smartcrop = window.smartcrop(crop_scale, crop_scale, **smart_crop_opts)
       # Vips counts with negative offsets from left and top
       left = (window.xoffset + smartcrop.xoffset)*-1
       top = (window.yoffset + smartcrop.yoffset)*-1

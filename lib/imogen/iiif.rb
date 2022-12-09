@@ -53,7 +53,7 @@ module Imogen
         Size.convert(region, opts[:size]) do |size|
           Rotation.convert(size, opts[:rotation]) do |rotation|
             Quality.convert(rotation, opts[:quality]) do |quality|
-              quality.write_to_file(dest_path)
+              quality.write_to_file(dest_path, background: [255, 255, 255])
               yield quality if block_given?
             end
           end

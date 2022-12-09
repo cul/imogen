@@ -5,6 +5,7 @@ describe Imogen::AutoCrop, vips: true do
   describe "#convert" do
     let(:output_file) { Dir.tmpdir + '/test-imogen-crop.jpg' }
     it "should successfully convert the image" do
+      expect_any_instance_of(Vips::Image).to receive(:write_to_file).with(String, {background: [255, 255, 255]}).and_call_original
       Imogen.with_image(fixture('sample.jpg').path) do |img|
         Imogen::AutoCrop.convert(img, output_file, 150)
       end

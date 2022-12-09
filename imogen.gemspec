@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob("{lib,spec}/**/*")
   spec.summary = "IIIF image derivative generation helpers for Vips"
   spec.homepage    = "https://github.com/cul/imogen"
-  spec.version = "0.2.2"
+  spec.version = "0.3.0"
 
   spec.add_dependency 'ruby-vips'
   spec.add_development_dependency 'rake'

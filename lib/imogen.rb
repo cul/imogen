@@ -10,12 +10,12 @@ module Imogen
       w = img.width
       h = img.height
       dims = (w > h) ? [scale, scale*h/w] : [scale*w/h, scale]
-      img.thumbnail_image(dims[0], height: dims[1]).write_to_file(dest_path)
+      img.thumbnail_image(dims[0], height: dims[1]).write_to_file(dest_path, background: [255, 255, 255])
     end
   end
   module Cropped
     def self.convert(img, dest_path, edges, scale=nil, format=:jpeg)
-      img.crop(*edges).write_to_file(dest_path)
+      img.crop(*edges).write_to_file(dest_path, background: [255, 255, 255])
     end
   end
   require 'imogen/auto_crop'

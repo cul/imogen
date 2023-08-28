@@ -1,6 +1,6 @@
 module Imogen
   module Iiif
-    class BadRequest < Exception; end
+    class BadRequest < StandardError; end
     class Transform
       def initialize(src)
         @width = 0

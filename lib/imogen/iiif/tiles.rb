@@ -11,9 +11,9 @@ module Imogen
       # Yields many times, for each set of iiif tile raster opts for the given image.
       # @param img [Image] The image to be analyzed.
       # @param dest_dir [String] The target output directory for the tile subdirectory hierarchy.
-      # @param format [String] IIIF quality value (e.g. 'color', 'default')
       # @param format [String] Tile format
-      # @param format [Hash] Raster opts for the tile (example: {region: '...'', size: '...', rotation: '0', quality: 'color', format: :jpeg})
+      # @param tile_size [Integer] Tile size
+      # @param quality [String] IIIF quality value (e.g. 'color', 'default')
       # @yield [image, suggested_dest_path_for_tile, format, raster_opts] Image and tile generation info
       def self.for(img, dest_dir, format = :jpg, tile_size = 128, quality = 'default')
         format = :jpg if format.to_s == 'jpeg'

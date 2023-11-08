@@ -104,7 +104,7 @@ module Imogen
       # expected tiles.
       # The issue with this method may be related to this:
       # https://github.com/libvips/libvips/discussions/2036
-      def self.generate_with_vips_dzsave(img, output_dir, format: :jpeg, tile_size: 128)
+      def self.generate_with_vips_dzsave(img, output_dir, format: :jpeg, tile_size: 128, tile_filename_without_extension: 'default')
         warn "Warning: The generate_with_vips_dzsave is only partially functional and should not "\
              "be used to generate tiles yet.  If you use this method, some IIIF tiles will be missing."
         format = :jpg if format == :jpeg
@@ -112,10 +112,21 @@ module Imogen
         img.dzsave(
           output_dir,
           layout: 'iiif',
-          suffix: ".#{format}",
+          suffix: ".tmp.#{format}",
           overlap: 0,
           tile_size: tile_size
         )
+
+        # Update tile names with desired value
+        Dir[File.join(output_dir, "**/*.tmp.#{format}")].each do |file_path|
+          new_name = File.join(File.dirname(file_path), "#{tile_filename_without_extension}.#{format}")
+          File.rename(file_path, new_name)
+        end
+
+        # Clean up unused additional dzsave files
+        ['info.json', 'vips-properties.xml'].each do |unnecessary_file_name|
+          File.delete(File.join(output_dir, unnecessary_file_name))
+        end
       end
     end
   end

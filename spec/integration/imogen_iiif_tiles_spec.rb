@@ -2,6 +2,7 @@ require 'imogen'
 require 'tmpdir'
 
 describe Imogen::Iiif::Tiles, vips: true do
+  let(:source_image) { fixture('sample.jpg').path } # sample.jpg is 1920w × 3125h
   let(:tile_size) { 512 }
   let(:output_dir) { Dir.tmpdir + '/tile-output-dir' }
   let(:expected_files) do
@@ -51,7 +52,7 @@ describe Imogen::Iiif::Tiles, vips: true do
 
   describe "#for" do
     it "should successfully generate the expected tile files" do
-      Imogen.with_image(fixture('sample.jpg').path) do |image|
+      Imogen.with_image(source_image) do |image|
         Imogen::Iiif::Tiles.for(image, output_dir, :jpeg, tile_size) do |img, suggested_tile_dest_path, format, opts|
           FileUtils.mkdir_p(File.dirname(suggested_tile_dest_path))
           Imogen::Iiif.convert(img, suggested_tile_dest_path, format, opts)
@@ -71,7 +72,7 @@ describe Imogen::Iiif::Tiles, vips: true do
 
   describe "#generate_vips_dzsave_tiles" do
     pending "should successfully generate the expected tile files" do
-      Imogen.with_image(fixture('sample.jpg').path) do |image|
+      Imogen.with_image(source_image) do |image|
         Imogen::Iiif::Tiles.generate_with_vips_dzsave(image, output_dir, format: 'jpg', tile_size: tile_size)
       end
       generated_files = Dir["#{output_dir}/**/*.jpg"]

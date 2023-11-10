@@ -6,11 +6,13 @@ describe Imogen::Iiif::Tiles, type: :unit do
   end
   let(:tile512) {
     [
+      '/full/full/0/default.jpg',
       '/full/175,/0/default.jpg'
     ]
   }
   let(:tile256) {
     [
+      '/full/full/0/default.jpg',
       '/full/175,/0/default.jpg',
       '/full/88,/0/default.jpg'
     ]

@@ -25,6 +25,28 @@ module Imogen
         tile_width = tile_size
         tile_height = tile_size
 
+        # If the original image dimensions are smaller than the tile_size,
+        # generate a tile for region 'full' and size 'full'.
+        if width < tile_size && height < tile_size
+          raster_opts = {
+            region: 'full',
+            size: 'full',
+            rotation: 0,
+            quality: quality,
+            format: format
+          }
+
+          dest_path = File.join(
+            dest_dir,
+            raster_opts[:region],
+            raster_opts[:size],
+            raster_opts[:rotation].to_s,
+            "#{raster_opts[:quality]}.#{Imogen::Iiif::FORMATS[raster_opts[:format]]}"
+          )
+          yield(img, dest_path, raster_opts['format'], Imogen::Iiif.path_to_opts(dest_path, dest_dir))
+        end
+
+
         # NOTE: Algorithm below is based on: https://iiif.io/api/image/2.1/#a-implementation-notes
         self.scale_factors_for(width, height, tile_size).each do |scale_factor|
           scale_factor_as_float = scale_factor.to_f
@@ -85,8 +107,14 @@ module Imogen
                 format: format
               }
 
-              dest_path = File.join(dest_dir, region, size, '0', "#{quality}.#{Imogen::Iiif::FORMATS[format]}")
-              yield(img, dest_path, format, Imogen::Iiif.path_to_opts(dest_path, dest_dir))
+              dest_path = File.join(
+                dest_dir,
+                raster_opts[:region],
+                raster_opts[:size],
+                raster_opts[:rotation].to_s,
+                "#{raster_opts[:quality]}.#{Imogen::Iiif::FORMATS[raster_opts[:format]]}"
+              )
+              yield(img, dest_path, raster_opts['format'], Imogen::Iiif.path_to_opts(dest_path, dest_dir))
 
               row += 1
               y += tile_height

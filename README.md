@@ -1,8 +1,6 @@
 # imogen
 derivative generation and smart square thumbnail via libvips.
 
-NOTE: imogen >= 0.4.0 requires libvips >= 8.15 (to support the vips `revalidate` feature when reading in an image).
-
 ## Scale and re-format an image
 ```ruby
   Imogen.with_image('example.tiff') do |img|
@@ -11,13 +9,14 @@ NOTE: imogen >= 0.4.0 requires libvips >= 8.15 (to support the vips `revalidate`
   end
 ```
 
-## Scale and re-format an image, skipping any vips caching and re-reading in the source image
+## Scale and re-format an image, using the revalidate option to skip any vips caching and re-reading in the source image
 ```ruby
   Imogen.with_image('example.tiff', { revalidate: true }) do |img|
     # img is a FreeImage::BitMap
     Imogen::Scaled.convert(img, 'example-150.jpg', 150)
   end
 ```
+Note: The `revalidate` option requires libvips >= 8.15.
 
 ## Perform "interesting region" detection
 ```ruby

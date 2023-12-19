@@ -10,13 +10,19 @@ jobs:
     strategy:
       matrix:
         ruby-version: ['2.7.5', '3.0.3', '3.1.3', '3.2.2']
+        # Vips 8.14 does not support the revalidate feature, but 8.15 does
+        vips-version: ['apt-default-vips', '8.15.0']
     env:
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
     steps:
       - uses: actions/checkout@v3
       - run: sudo apt-get update
-      - name: Build libvips (so we can use version 8.15, since only 8.12 is available on Ubuntu 22)
+      - name: (Conditional) Install default apt-provided version of libvips
+        if: matrix.vips-version == 'apt-default-vips'
+        run: sudo apt-get install -y libvips42
+      - name: (Conditional) Build libvips (so we can use version ${{ matrix.vips-version }}, since only 8.12 is available on Ubuntu 22)
+        if: matrix.vips-version != 'apt-default-vips'
         run: |
           # Instructions below are based on:
           # https://www.libvips.org/install.html
@@ -46,9 +52,9 @@ jobs:
 
           # Download and compile selected version of vips
           cd /tmp
-          wget https://github.com/libvips/libvips/releases/download/v8.15.0/vips-8.15.0.tar.xz
-          tar xf vips-8.15.0.tar.xz
-          cd vips-8.15.0
+          wget https://github.com/libvips/libvips/releases/download/v${{ matrix.vips-version }}/vips-${{ matrix.vips-version }}.tar.xz
+          tar xf vips-${{ matrix.vips-version }}.tar.xz
+          cd vips-${{ matrix.vips-version }}
           meson build --libdir=lib --buildtype=release -Dintrospection=disabled
           cd build
           ninja

@@ -38,19 +38,23 @@ module Imogen
 
   # @param [String] src_path The local file path to the image.
   # @param [Hash] opts The options to use when opening an image.
-  # @option opts [Boolean] :revalidate When true, will force the underlying Vips library to
-  #                                    reload the source file instead of using cached data
-  #                                    from an earlier read.  This is useful if the source
+  # @option opts [Boolean] :revalidate (Requires libvips > 8.15) When true, will force the underlying
+  #                                    Vips library to reload the source file instead of using cached
+  #                                    data from an earlier read.  This is useful if the source
   #                                    file was recently recreated.
   def self.image(src_path, opts = {})
-    Vips::Image.new_from_file(src_path, revalidate: opts[:revalidate] || false)
+    if opts.empty?
+      Vips::Image.new_from_file(src_path)
+    else
+      Vips::Image.new_from_file(src_path, **opts)
+    end
   end
 
   # @param [String] src_path The local file path to the image.
   # @param [Hash] opts The options to use when opening an image.
-  # @option opts [Boolean] :revalidate When true, will force the underlying Vips library to
-  #                                    reload the source file instead of using cached data
-  #                                    from an earlier read.  This is useful if the source
+  # @option opts [Boolean] :revalidate (Requires libvips > 8.15) When true, will force the underlying
+  #                                    Vips library to reload the source file instead of using cached
+  #                                    data from an earlier read.  This is useful if the source
   #                                    file was recently recreated.
   def self.with_image(src_path, opts = {}, &block)
     block.yield(image(src_path, opts))

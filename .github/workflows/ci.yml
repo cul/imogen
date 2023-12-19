@@ -14,7 +14,7 @@ jobs:
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: sudo apt-get update
       - name: Build libvips (so we can use version 8.15, since only 8.12 is available on Ubuntu 22)
         run: |

@@ -153,7 +153,7 @@ module Imogen
 
         # Clean up unused additional dzsave files
         ['info.json', 'vips-properties.xml'].each do |unnecessary_file_name|
-          File.delete(File.join(output_dir, unnecessary_file_name))
+          File.delete(file_to_delete)
         end
       end
     end

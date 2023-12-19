@@ -1,5 +1,7 @@
 # imogen
-derivative generation and smart square thumbnail via libvips
+derivative generation and smart square thumbnail via libvips.
+
+NOTE: imogen >= 0.4.0 requires libvips >= 8.15 (to support the vips `revalidate` feature when reading in an image).
 
 ## Scale and re-format an image
 ```ruby
@@ -8,6 +10,15 @@ derivative generation and smart square thumbnail via libvips
     Imogen::Scaled.convert(img, 'example-150.jpg', 150)
   end
 ```
+
+## Scale and re-format an image, skipping any vips caching and re-reading in the source image
+```ruby
+  Imogen.with_image('example.tiff', { revalidate: true }) do |img|
+    # img is a FreeImage::BitMap
+    Imogen::Scaled.convert(img, 'example-150.jpg', 150)
+  end
+```
+
 ## Perform "interesting region" detection
 ```ruby
   Imogen.with_image('example.tiff') do |img|
@@ -28,10 +39,11 @@ derivative generation and smart square thumbnail via libvips
     Imogen::Iiif.convert(img, 'example-iiif-region.jpg', 'jpg', region: '50,60,500,800', size: '!100,100', quality: 'color', rotation: '!90')
   end
 ```
+
 ## Build IIIF parameters for a DZI-style tileset
 ```ruby
   Imogen.with_image('example.tiff') do |img|
-    Imogen::Iiif::Tiles.for(img,'/tmp',:jpeg) do |bitmap, suggested_path, format, iiif_opts|
+    Imogen::Iiif::Tiles.for(img,'/tmp',:jpg, 128, 'default') do |image, suggested_tile_dest_path, format, opts|
       # do something
     end
   end

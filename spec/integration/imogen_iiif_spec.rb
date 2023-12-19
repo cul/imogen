@@ -1,7 +1,7 @@
 require 'imogen'
 require 'tmpdir'
 
-describe Imogen::AutoCrop, vips: true do
+describe Imogen::Iiif, vips: true do
   describe "#convert" do
     let(:output_file) { Dir.tmpdir + '/test-imogen-convert.jpg' }
     it "should successfully convert the image" do
@@ -16,3 +16,4 @@ describe Imogen::AutoCrop, vips: true do
     end
   end
 end
+

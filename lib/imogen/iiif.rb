@@ -45,6 +45,7 @@ module Imogen
 
     FORMATS = {jpeg: 'jpg', jpg: 'jpg', png: 'png', jp2: 'jp2'}
     EXTENSIONS = {'jpg' => :jpeg, 'png' => :png, 'jp2' => :jp2}
+
     def self.convert(img, dest_path, format=nil, opts={})
       format ||= opts.fetch(:format,:jpeg)
       format = format.to_sym
@@ -60,6 +61,7 @@ module Imogen
         end
       end
     end
+
     def self.path_to_opts(path,parent_dir)
       if parent_dir and path.start_with? parent_dir
         path = path.sub(parent_dir,'')

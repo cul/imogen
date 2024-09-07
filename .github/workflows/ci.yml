@@ -9,15 +9,58 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['2.7.5', '3.0.3', '3.1.3']
+        ruby-version: ['2.7.5', '3.0.3', '3.1.3', '3.2.2']
+        # Vips 8.14 does not support the revalidate feature, but 8.15 does
+        vips-version: ['apt-default-vips', '8.15.0']
     env:
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: sudo apt-get update
-      - name: Install other apt dependencies
+      - name: (Conditional) Install default apt-provided version of libvips
+        if: matrix.vips-version == 'apt-default-vips'
         run: sudo apt-get install -y libvips42
+      - name: (Conditional) Build libvips (so we can use version ${{ matrix.vips-version }}, since only 8.12 is available on Ubuntu 22)
+        if: matrix.vips-version != 'apt-default-vips'
+        run: |
+          # Instructions below are based on:
+          # https://www.libvips.org/install.html
+          # and
+          # https://github.com/libvips/libvips/wiki/Build-for-Ubuntu
+          #
+          # Unstall any already-installed version of vips
+          sudo apt-get remove libvips42
+
+          # Install meson build system
+          sudo apt-get install -y meson
+
+          # Download build dependencies
+          sudo apt-get install -y build-essential pkg-config libglib2.0-dev libexpat1-dev
+
+          # Download various libraries that we want for vips features
+          sudo apt-get install -y \
+          libfftw3-dev libexif-dev libjpeg-turbo8-dev \
+          libpng-dev libwebp-dev libtiff5-dev \
+          libheif-dev libexpat1-dev libcfitsio-dev \
+          libmatio-dev libnifti-dev libhwy-dev \
+          liblcms2-dev libpoppler-glib-dev librsvg2-dev \
+          libopenexr-dev libpango1.0-dev libarchive-dev \
+          libopenslide-dev libffi-dev libopenjp2-7-dev \
+          libimagequant-dev libcgif-dev \
+          liborc-0.4-dev # FIXME: Remove once libhwy 1.0.5 is available.
+
+          # Download and compile selected version of vips
+          cd /tmp
+          wget https://github.com/libvips/libvips/releases/download/v${{ matrix.vips-version }}/vips-${{ matrix.vips-version }}.tar.xz
+          tar xf vips-${{ matrix.vips-version }}.tar.xz
+          cd vips-${{ matrix.vips-version }}
+          meson build --libdir=lib --buildtype=release -Dintrospection=disabled
+          cd build
+          ninja
+          ninja test
+          sudo ninja install
+          vips --version
       - name: Add --no-document option to .gemrc file to speed up bundle install
         run: "echo 'gem: --no-document' > ~/.gemrc"
       - name: Set up Ruby

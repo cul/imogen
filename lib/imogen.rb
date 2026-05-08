@@ -6,7 +6,7 @@ module Imogen
   extend FFI::Library
 
   # Note: library_name function comes from `require 'vips'`
-  ffi_lib library_name("vips", 42)
+  ffi_lib FFI.library_name("vips", 42)
 
   attach_function :vips_cache_get_max_mem, [], :int
   attach_function :vips_cache_set_max_mem, [:int], :void

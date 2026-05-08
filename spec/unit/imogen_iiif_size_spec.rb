@@ -1,10 +1,11 @@
 require 'imogen/iiif'
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Imogen::Iiif::Size, type: :unit do
-  before(:all) do
-    @test_image = ImageStub.new(175,131)
-  end
-  subject {Imogen::Iiif::Size.new(@test_image)}
+  let(:test_image_width) { 175 }
+  let(:test_image_height) { 131 }
+  let(:test_image) { ImageStub.new(test_image_width, test_image_height) }
+  subject {Imogen::Iiif::Size.new(test_image)}
+
   describe "#get" do
     describe "with scaling width" do
       it "should calculate for a good value" do
@@ -16,6 +17,14 @@ describe Imogen::Iiif::Size, type: :unit do
       it "should reject bad values" do
         expect{subject.get("0,")}.to raise_error Imogen::Iiif::BadRequest
         expect{subject.get("-2,")}.to raise_error Imogen::Iiif::BadRequest
+      end
+
+      context "when the scaled width is a near-zero number before rounding is applied" do
+        let(:test_image_width) { 4096 }
+        let(:test_image_height) { 3 }
+        it "should round very small values to 1 (not 0)" do
+          expect(subject.get("512,")).to eql([512, 1])
+        end
       end
     end
     describe "with scaling height" do
@@ -29,6 +38,14 @@ describe Imogen::Iiif::Size, type: :unit do
       it "should reject bad values" do
         expect{subject.get(",0")}.to raise_error Imogen::Iiif::BadRequest
         expect{subject.get(",-2")}.to raise_error Imogen::Iiif::BadRequest
+      end
+
+      context "when the scaled height is a near-zero number before rounding is applied" do
+        let(:test_image_width) { 3 }
+        let(:test_image_height) { 4096 }
+        it "should round very small values to 1 (not 0)" do
+          expect(subject.get(",512")).to eql([1, 512])
+        end
       end
     end
     describe "with scaling width and height" do

@@ -11,7 +11,7 @@ jobs:
       matrix:
         ruby-version: ['2.7.5', '3.0.3', '3.1.3', '3.2.2']
         # Vips 8.14 does not support the revalidate feature, but 8.15 does
-        vips-version: ['apt-default-vips', '8.15.0']
+        vips-version: ['apt-default-vips'] # ['apt-default-vips', '8.15.0']
     env:
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 

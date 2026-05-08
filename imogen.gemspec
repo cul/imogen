@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/cul/imogen"
   spec.version = "0.4.0"
 
-  spec.add_dependency 'ruby-vips'
+  spec.add_dependency 'ruby-vips', '>= 2.3.0'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec', '~> 3.12'
 end

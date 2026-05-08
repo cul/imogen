@@ -9,8 +9,12 @@ class Size < Transform
       w = md[1] ? min(Integer(md[1]), @width) : nil
       h = md[2] ? min(Integer(md[2]), @height) : nil
       raise BadRequest.new("bad scale #{scale}") unless w or h
-      w ||= (@width * (h.to_f / @height)).round
-      h ||= (@height * (w.to_f / @width)).round
+      w ||= (@width * (h.to_f / @height))
+      h ||= (@height * (w.to_f / @width))
+      w = 1 if w > 0 && w < 1 # Avoid rounding very small numbers to zero
+      h = 1 if h > 0 && h < 1 # Avoid rounding very small numbers to zero
+      w = w.round
+      h = h.round
       e = [w,h]
     elsif md = /^pct:(\d+(\.\d+)?)/.match(scale)
       p = Float(md[1])

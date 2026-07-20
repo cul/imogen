@@ -43,7 +43,8 @@ module Imogen
             raster_opts[:rotation].to_s,
             "#{raster_opts[:quality]}.#{Imogen::Iiif::FORMATS[raster_opts[:format]]}"
           )
-          yield(img, dest_path, raster_opts['format'], Imogen::Iiif.path_to_opts(dest_path, dest_dir))
+
+          yield(img, dest_path, raster_opts[:format], Imogen::Iiif.path_to_opts(dest_path, dest_dir))
         end
 
 
@@ -114,7 +115,7 @@ module Imogen
                 raster_opts[:rotation].to_s,
                 "#{raster_opts[:quality]}.#{Imogen::Iiif::FORMATS[raster_opts[:format]]}"
               )
-              yield(img, dest_path, raster_opts['format'], Imogen::Iiif.path_to_opts(dest_path, dest_dir))
+              yield(img, dest_path, raster_opts[:format], Imogen::Iiif.path_to_opts(dest_path, dest_dir))
 
               row += 1
               y += tile_height

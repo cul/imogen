@@ -70,7 +70,7 @@ describe Imogen::Iiif::Tiles, type: :unit do
         64 => tile64
       }.each do |tile_size, expected_tiles|
         actual = []
-        described_class.for(@test_image, '', :jpeg, tile_size) do |img, dest_path, format, opts|
+        described_class.for(@test_image, '', :jpg, tile_size) do |img, dest_path, format, opts|
           actual << dest_path
         end
         expect(actual).to eql(expected_tiles)
@@ -82,6 +82,17 @@ describe Imogen::Iiif::Tiles, type: :unit do
       actual = []
       described_class.for(@test_image, '', :png, 256) do |img, dest_path, format, opts|
         actual << dest_path
+        expect(format).to eq(:png)
+      end
+      expect(actual).to eql(expected)
+    end
+    it 'should produce jpg when requested' do
+      expected = tile256
+      expected.uniq!
+      actual = []
+      described_class.for(@test_image, '', :jpg, 256) do |img, dest_path, format, opts|
+        actual << dest_path
+        expect(format).to eq(:jpg)
       end
       expect(actual).to eql(expected)
     end
